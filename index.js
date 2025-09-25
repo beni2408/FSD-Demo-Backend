@@ -13,10 +13,6 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("/", (req, res) => {
-  res.send("<h2>Welcome to the Task Manager API</h2>");
-});
-
 app.use("/api/auth", authRouter);
 const PORT = process.env.PORT || 3080;
 app.use(errorHAndler);
