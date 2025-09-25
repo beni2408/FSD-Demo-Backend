@@ -4,6 +4,7 @@ import connectDB from "./src/config/db.js";
 dotenv.config();
 import authRouter from "./src/routes/authRoutes.js";
 import { errorHAndler } from "./src/middlewares/errorHandler.js";
+import userRouter from "./src/routes/userRoutes.js";
 
 const app = express();
 app.use(express.json());
@@ -14,6 +15,7 @@ app.use((req, res, next) => {
 });
 
 app.use("/api/auth", authRouter);
+app.use("/api/users", userRouter);
 const PORT = process.env.PORT || 3080;
 app.use(errorHAndler);
 app.listen(PORT, () => {
