@@ -5,6 +5,7 @@ dotenv.config();
 import authRouter from "./src/routes/authRoutes.js";
 import { errorHAndler } from "./src/middlewares/errorHandler.js";
 import userRouter from "./src/routes/userRoutes.js";
+import taskRouter from "./src/routes/taskRoutes.js";
 
 const app = express();
 app.use(express.json());
@@ -16,6 +17,7 @@ app.use((req, res, next) => {
 
 app.use("/api/auth", authRouter);
 app.use("/api/users", userRouter);
+app.use("/api/tasks", taskRouter);
 const PORT = process.env.PORT || 3080;
 app.use(errorHAndler);
 app.listen(PORT, () => {
