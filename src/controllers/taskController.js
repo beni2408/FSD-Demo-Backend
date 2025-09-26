@@ -63,6 +63,78 @@ export const getAllTasks = async (req, res) => {
   });
 };
 
-export const updateTask = (req, res) => {};
+export const updateTask = async (req, res) => {
+  const { assignedTo, status } = req.body;
+  const taskId = req.params.id;
 
-export const delteTask = (req, res) => {};
+  if (assignedTo) {
+    const assignedUser = await userModel.findById(assignedTo);
+    if (!assignedUser) {
+      return res.status(404).json({
+        status: "error",
+        message: "Assigned user not found",
+      });
+    }
+  }
+
+  const task = await taskModel.findById(taskId);
+  if (req.user.role === "Admin") {
+    Object.assign(task, req.body);
+  } else if (
+    req.user.role === "Manager" &&
+    task.createdBy.toString() === req.user.id
+  ) {
+    Object.assign(task, req.body);
+  } else if (
+    req.user.role == "Employee" &&
+    task.assignedTo.toString() === req.user.id
+  ) {
+    if (!status) {
+      return res.status(401).json({
+        status: "error",
+        message: "Status is required",
+      });
+    }
+    task.status = status;
+  } else {
+    return res.status(401).json({
+      status: "error",
+      message: "You are not authorized to update this task",
+    });
+  }
+
+  await task.save();
+
+  //   sendEmail({
+  //     to: task.email,
+  //     subject: `Updates in your task ${task.title}`,
+  //     text: `Hello ${task.name} \n
+  //     Your task ${task.title} might have some updates. Login and check you SJCU Portal\n \n
+  //     description : ${task.description}
+  //     \n\n DueDate: ${task.dueDate}
+  //     `,
+  //   });
+  res.status(200).json({
+    status: "success",
+    message: "Task updated successfully",
+    data: task,
+  });
+
+  //   if (req.user.role === "Employee") {
+  //     await taskModel.findByIdAndUpdate(taskId, { status });
+  //   }else(req.user.role == "Admin"){
+  //     await taskModel.find
+  //   }
+};
+
+export const delteTask = async (req, res) => {
+  const { id } = req.params;
+
+  const deltedtask = await taskModel.findByIdAndDelete(id);
+
+  res.status(200).json({
+    status: "Success",
+    message: "Task deleted successfully",
+    data: deltedtask,
+  });
+};
