@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+  createUser,
   deleteUser,
   getAllUsers,
   updateUserRole,
@@ -10,6 +11,7 @@ import { protect } from "../middlewares/authMiddleware.js";
 const userRouter = Router();
 
 userRouter.use(protect, authorizeRole("Admin"));
+userRouter.post("/", createUser);
 
 userRouter.get("/", getAllUsers);
 userRouter.put("/:id/role", updateUserRole);

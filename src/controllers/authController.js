@@ -2,8 +2,8 @@ import userModel from "../models/userModel.js";
 import generateToken from "../utils/generateToken.js";
 
 export const register = async (req, res) => {
-  const { name, email, password, role } = req.body;
-  const user = await userModel.findOne({ email });
+  const { name, email, password } = req.body;
+  const user = await userModel.findOne({ email }).select("+password");
   if (user) {
     return res.status(400).json({
       status: "error",
@@ -12,7 +12,7 @@ export const register = async (req, res) => {
     });
   }
 
-  const newUser = await userModel.create({ name, email, password, role });
+  const newUser = await userModel.create({ name, email, password });
   const token = generateToken({ id: newUser._id, role: newUser.role });
   res.status(201).json({
     status: "success",
