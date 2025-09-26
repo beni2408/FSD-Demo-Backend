@@ -6,9 +6,11 @@ import authRouter from "./src/routes/authRoutes.js";
 import { errorHAndler } from "./src/middlewares/errorHandler.js";
 import userRouter from "./src/routes/userRoutes.js";
 import taskRouter from "./src/routes/taskRoutes.js";
+import cors from "cors";
 
 const app = express();
 app.use(express.json());
+app.use(cors());
 //debug helper => consoles request type, req url, req time
 app.use((req, res, next) => {
   console.log(req.method, req.url, new Date().toLocaleString());
